@@ -208,4 +208,13 @@ void LedControl::spiTransfer(int addr, volatile byte opcode, volatile byte data)
     digitalWrite(SPI_CS,HIGH);
 }    
 
+void LedControl::writeDisplay(void) {
+  Wire.beginTransmission(0x00);
+  Wire.write((uint8_t)0x00); // start at address $00
 
+  for (uint8_t i=0; i<8; i++) {
+    Wire.write(status[i] & 0xFF);    
+    Wire.write(status[i] >> 8);    
+  }
+  Wire.endTransmission();  
+}
