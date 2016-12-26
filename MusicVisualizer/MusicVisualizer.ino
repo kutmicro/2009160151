@@ -1,38 +1,6 @@
-/*
-PICCOLO is a tiny Arduino-based audio visualizer.
-
-Hardware requirements:
- - Most Arduino or Arduino-compatible boards (ATmega 328P or better).
- - Adafruit Bicolor LED Matrix with I2C Backpack (ID: 902)
- - Adafruit Electret Microphone Amplifier (ID: 1063)
- - Optional: battery for portable use (else power through USB)
-Software requirements:
- - elm-chan's ffft library for Arduino
-
-Connections:
- - 3.3V to mic amp+ and Arduino AREF pin <-- important!
- - GND to mic amp-
- - Analog pin 0 to mic amp output
- - +5V, GND, SDA (or analog 4) and SCL (analog 5) to I2C Matrix backpack
-
-Written by Adafruit Industries.  Distributed under the BSD license --
-see license.txt for more information.  This paragraph must be included
-in any redistribution.
-
-ffft library is provided under its own terms -- see ffft.S for specifics.
-*/
-
-// IMPORTANT: FFT_N should be #defined as 128 in ffft.h.
-
-#include <avr/pgmspace.h>
 #include <ffft.h>
-#include <math.h>
-#include <Wire.h>
 #include <LedControl.h>
 
-// Microphone connects to Analog Pin 0.  Corresponding ADC channel number
-// varies among boards...it's ADC0 on Uno and Mega, ADC7 on Leonardo.
-// Other boards may require different settings; refer to datasheet.
 #ifdef __AVR_ATmega32U4__
  #define ADC_CHANNEL 7
 #else
@@ -211,12 +179,9 @@ void loop() {
     // The 'peak' dot color varies, but doesn't necessarily match
     // the three screen regions...yellow has a little extra influence.
     y = 8 - peak[x];
-    if(y < 2)      lc.setLed(0, x, y, true);
-    else if(y < 6) lc.setLed(0, x, y, true);
-    else           lc.setLed(0, x, y, true);
+      lc.setLed(0, x, y, true);
   }
 
-  lc.writeDisplay();
 
   // Every third frame, make the peak pixels drop by 1:
   if(++dotCount >= 3) {
